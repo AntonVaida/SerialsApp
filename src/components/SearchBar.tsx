@@ -10,13 +10,17 @@ export const SearchBar = () => {
   const [query, setQuery] = useState('')
   const dispatch = useAppDispatch();
   const { pageCounter } = useAppSelector(store => store.pageCounter)
+
+  const debouncedSearch = debounce((searchQuery) => {
+    dispatch(fetchFilms({ query: searchQuery, page: pageCounter }));
+    dispatch(setSearchStatus(true));
+  }, 300);
    
 
   useEffect(() => {
     if (query.length > 1) {
       const searchQuery = query.trim().replace(/ /g, '%20');
-      dispatch(fetchFilms({query: searchQuery, page: pageCounter}));
-      dispatch(setSearchStatus(true));
+      debouncedSearch(searchQuery)
 
       return;
     } 

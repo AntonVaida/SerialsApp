@@ -24,7 +24,6 @@ export const FilmList = () => {
   }, []);
 
   const handleEndReached = () => {
-    console.log('Reached!!!')
     dispatch(setCounterPage(pageCounter + 1))
   }
 
