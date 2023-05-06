@@ -19,17 +19,17 @@ export const DetailFilmInform = ({route, navigation}) => {
           headerShown: true,
           title: route.params.selesctFilm?.show?.name ? route.params.selesctFilm?.show?.name : 'Journeys',
           headerStyle: {
-              backgroundColor: colors.LIGHT_BACKGORUND,
+              backgroundColor: colors.PRIMARY_COLOR,
           },
           headerTitleStyle: {
               fontFamily: 'Ubuntu-Regular',
               fontStyle: 'normal',
               fontWeight: '700',
               fontSize: 16,
-              color: colors.TEXT_COLOR
+              color: colors.JOURNEY_INFORMATION_TEXT
           },
           headerTitleAlign: 'center',
-          headerTintColor: colors.TEXT_COLOR,
+          headerTintColor: colors.JOURNEY_INFORMATION_TEXT,
           headerBackVisible: true,
       });
   }, []);
