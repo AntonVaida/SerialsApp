@@ -1,5 +1,5 @@
 import React, { useLayoutEffect, useMemo} from "react"
-import { View, Text, StyleSheet, FlatList, Dimensions, SafeAreaView, ActivityIndicator } from "react-native"
+import { View, Text, StyleSheet, FlatList, SafeAreaView, ActivityIndicator, useWindowDimensions } from "react-native"
 import { useAppNavigation, useAppDispatch, useAppSelector } from "../../../AwesomeProject/src/app/hooks";
 import { colors } from "../../src/assents/colors/colors";
 import { SearchBar } from "../../src/components/SearchBar";
@@ -8,14 +8,14 @@ import { FilmCard } from "../components/FilmCard";
 import { setCounterPage } from "../features/pageCounterSlice";
 import { ErrorModal } from "../../src/components/ErrorModal";
 
-const screenHeight = Dimensions.get('window').height;
-const screenWidth = Dimensions.get('window').width;
-
 export const FilmList = () => {
   const navigation = useAppNavigation();
   const dispatch = useAppDispatch();
   const {filmList, error, loading, nonResult, nextPageIsEmpty} = useAppSelector((store) => store.filmList)
   const { pageCounter } = useAppSelector(store => store.pageCounter)
+  const windowDimensions = useWindowDimensions();
+  const screenHeight = windowDimensions.height;
+  const screenWidth = windowDimensions.width;
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -39,17 +39,17 @@ export const FilmList = () => {
   }, [error, nextPageIsEmpty])
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, {height: screenHeight, width: screenWidth}]}>
     <ErrorModal error={modalMessadge} />
     <SearchBar />
       {(loading && !filmList.length) ? (
-         <View style={styles.loadingContainer}>
+         <View style={[styles.loadingContainer, {height: screenHeight - 155}]}>
             <ActivityIndicator size="large" color={colors.MAIN_HEADING_COLOR_TWO} />
         </View>
       ) : (
-        <View style={styles.contentCotainer}>
+        <View style={[styles.contentCotainer, {height: screenHeight - 80, width: screenWidth}]}>
           <FlatList
-            style={styles.listStyle}
+            style={{width: screenWidth}}
             data={filmList}
             renderItem={({item}) => (
               <FilmCard film={item}/>
@@ -70,11 +70,11 @@ export const FilmList = () => {
             }}
             ListEmptyComponent={() => (
               nonResult ? (
-              <View style={styles.emtyListBunner}>
+              <View style={[styles.emtyListBunner, {height: screenHeight - 155}]}>
                 <Text style={styles.textMessadge}>Sorry, nothing found with this search</Text>
               </View>
               ) : (
-              <View style={styles.emtyListBunner}>
+              <View style={[styles.emtyListBunner, {height: screenHeight - 155,}]}>
                 <Text style={styles.textMessadge}>Type the show's name</Text>
               </View>
               )
@@ -89,15 +89,11 @@ export const FilmList = () => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.PRIMARY_COLOR,
-    height: screenHeight,
-    width: screenWidth, 
     display: 'flex', 
     justifyContent: 'flex-start', 
     alignItems: 'center'
   },
   contentCotainer: {
-    height: screenHeight - 80,
-    width: screenWidth, 
     display: 'flex', 
     justifyContent: 'center', 
     alignItems: 'center'
@@ -145,25 +141,17 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     textAlign: 'center',
   },
-
-
-/////
-  listStyle: {
-    width: screenWidth,
-  },
   separator: {
     height: 15,
     marginLeft: 10,
     marginRight: 10,
   },
   emtyListBunner: {
-    height: screenHeight - 155,
     display: 'flex', 
     justifyContent: 'center', 
     alignItems: 'center',
   },
   loadingContainer: {
-    height: screenHeight - 155,
     display: 'flex', 
     justifyContent: 'center', 
     alignItems: 'center'

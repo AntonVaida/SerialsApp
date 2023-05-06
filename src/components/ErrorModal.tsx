@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react"
-import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Modal } from "react-native"
+import { View, Text, StyleSheet, TouchableOpacity, useWindowDimensions, Modal } from "react-native"
 import { colors } from "../assents/colors/colors";
-const screenWidth = Dimensions.get('window').width;
 
 type Props = {
   error: string | null
@@ -9,6 +8,8 @@ type Props = {
 
 export const ErrorModal:React.FC<Props> = ({error}) => {
   const [showModal, setShowModal] = useState(false);
+  const windowDimensions = useWindowDimensions();
+  const screenWidth = windowDimensions.width;
 
   useEffect(() => {
     if (Boolean(error)) {
@@ -33,7 +34,7 @@ export const ErrorModal:React.FC<Props> = ({error}) => {
       transparent={true}
     >
       <View style={styles.modalBackground}>
-        <View style={styles.modalContainer}>
+        <View style={[styles.modalContainer, {width: screenWidth * 0.9}]}>
           <View>
             <Text style={styles.modalText}>{error}</Text>
           </View>
@@ -54,7 +55,6 @@ export const ErrorModal:React.FC<Props> = ({error}) => {
 const styles = StyleSheet.create({
   modalContainer: {
     height: 200,
-    width: screenWidth * 0.9,
     backgroundColor: colors.INPUT_BACKGROUND,
     borderRadius: 10,
     display: 'flex',

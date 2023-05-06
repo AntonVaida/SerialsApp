@@ -1,18 +1,17 @@
 import React, {useLayoutEffect, useState, useMemo} from "react"
-import { View, Text, StyleSheet, TouchableOpacity, Image, Dimensions, ScrollView, Linking} from "react-native"
+import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView, Linking, useWindowDimensions} from "react-native"
 import { normalizeText } from "../utils/normalizeText";
 import { colors } from "../assents/colors/colors";
 import { Film } from "../types/Film";
 import RenderHtml from 'react-native-render-html';
 import { Rating } from "../components/Rating";
-const screenHeight = Dimensions.get('window').height;
-const screenWidth = Dimensions.get('window').width;
 
-
-const NOT_AVAILABLE_IMG ='https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Image_not_available.png/640px-Image_not_available.png'
 
 export const DetailFilmInform = ({route, navigation}) => {
   const [openFullSummary, setOpenFullSummaty] = useState(false)
+  const windowDimensions = useWindowDimensions();
+  const screenHeight = windowDimensions.height;
+  const screenWidth = windowDimensions.width;
 
   useLayoutEffect(() => {
       navigation.setOptions({
@@ -54,12 +53,12 @@ export const DetailFilmInform = ({route, navigation}) => {
 
   return (
     <ScrollView>
-      <View style={styles.container}>
-        <View style={styles.imgContainer}>
+      <View style={[styles.container, {minHeight: screenHeight}]}>
+        <View style={[styles.imgContainer, {height: screenHeight * 0.4}]}>
           {(film?.show?.image?.original) ? (
-            <Image source={{uri: film?.show?.image?.original}} style={styles.img} />
+            <Image source={{uri: film?.show?.image?.original}} style={[styles.img, {height: screenHeight * 0.4}]} />
           ) : (
-            <Image source={{uri: NOT_AVAILABLE_IMG}} style={styles.img} />
+            <Image source={require('../../src/assents/images/Image_not_available.png')} style={styles.img} />
           )}
         </View>
         <View style={styles.informContainer}>
@@ -70,7 +69,7 @@ export const DetailFilmInform = ({route, navigation}) => {
           </View>
           <Rating film={film} />
           {(film?.show?.summary && htmlContent) && (
-            <View style={styles.summaryContainer}>
+            <View style={[styles.summaryContainer, {width: screenWidth}]}>
               <View style={styles.summaryTitleContainer}>
                 <Text style={styles.summaryTitle}>Summary</Text>
               </View>
@@ -78,6 +77,7 @@ export const DetailFilmInform = ({route, navigation}) => {
                 <RenderHtml 
                   source={{ html: htmlContent }}
                   tagsStyles={styles}
+                  contentWidth={screenWidth}
                 />
               </View>
               {(film?.show?.summary.length > 97) && (
@@ -94,9 +94,9 @@ export const DetailFilmInform = ({route, navigation}) => {
               )}
             </View>
           )}
-          <View style={styles.buttonContainer}>
+          <View style={[styles.buttonContainer, {width: screenWidth}]}>
             <TouchableOpacity 
-              style={styles.showButton}
+              style={[styles.showButton, {width: screenWidth * 0.8}]}
               onPress={() => {
                 buttonHandle()
               }}
@@ -118,15 +118,12 @@ const styles = StyleSheet.create({
     backgroundColor: colors.PRIMARY_COLOR,
     display: 'flex',
     alignItems: 'center',
-    minHeight: screenHeight,
   },
   img: {
     width: '100%',
-    height: screenHeight * 0.4
   },
   imgContainer: {
     width: '100%',
-    height: screenHeight * 0.4
   },
   informContainer: {},
   nameContainer: {
@@ -155,7 +152,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: colors.INPUT_BACKGROUND,
-    width: screenWidth,
     borderRadius: 10,
   },
   summaryText: {
@@ -223,7 +219,6 @@ const styles = StyleSheet.create({
   },
   showButton: {
     height: 70,
-    width: screenWidth * 0.8,
     backgroundColor: colors.MAIN_HEADING_COLOR_TWO,
     borderRadius: 35,
     display: 'flex',
@@ -239,7 +234,6 @@ const styles = StyleSheet.create({
     borderWidth: 0,
   },
   buttonContainer: {
-    width: screenWidth,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',

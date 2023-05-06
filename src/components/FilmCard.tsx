@@ -1,19 +1,18 @@
 import React from "react"
-import { View, Text, StyleSheet, TouchableOpacity, Image, Dimensions } from "react-native"
+import { View, Text, StyleSheet, TouchableOpacity, Image, useWindowDimensions } from "react-native"
 import { useAppNavigation } from "../../src/app/hooks";
 import { colors } from "../assents/colors/colors";
 import { Film } from "../types/Film";
 import Icon from 'react-native-vector-icons/MaterialIcons';
-const screenWidth = Dimensions.get('window').width;
 
 type Props = {
   film: Film,
 };
 
-const NOT_AVAILABLE_IMG ='https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Image_not_available.png/640px-Image_not_available.png'
-
 export const FilmCard:React.FC<Props> = ({film}) => {
   const navigation = useAppNavigation();
+  const windowDimensions = useWindowDimensions();
+  const screenWidth = windowDimensions.width;
 
   const handleToDeatilScreen = (item) => {
     navigation.navigate('DetailFilmInform', {
@@ -32,10 +31,10 @@ export const FilmCard:React.FC<Props> = ({film}) => {
         {(film?.show?.image?.original) ? (
           <Image source={{uri: film?.show?.image?.original}} style={styles.img} />
         ) : (
-          <Image source={{uri: NOT_AVAILABLE_IMG}} style={styles.img} />
+          <Image source={require('../../src/assents/images/Image_not_available.png')} style={styles.img} />
         )}
       </View>
-      <View style={styles.informContainer}>
+      <View style={[styles.informContainer, {width: screenWidth * 0.9}]}>
         <View>
           <Text style={styles.name}>{film?.show?.name}</Text>
         </View>
@@ -55,7 +54,6 @@ export const FilmCard:React.FC<Props> = ({film}) => {
 
 const styles = StyleSheet.create({
   container: {
-    width: screenWidth * 0.9,
     height: 300,
     display: 'flex',
     justifyContent: 'flex-start',

@@ -1,20 +1,23 @@
 import React from "react"
-import { View, Text, StyleSheet, Image, Dimensions } from "react-native"
+import { View, Text, StyleSheet, Image, useWindowDimensions } from "react-native"
 import { colors } from "../assents/colors/colors";
 import { Film } from "../types/Film";
 import Icon from 'react-native-vector-icons/MaterialIcons';
-const screenWidth = Dimensions.get('window').width;
+
 
 type Props = {
   film: Film
 }
 
 export const Rating:React.FC<Props> = ({film}) => {
+  const windowDimensions = useWindowDimensions();
+  const screenWidth = windowDimensions.width;
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {width: screenWidth}]}>
       <View style={styles.genresContainerFlex}>
         {(film?.show?.genres?.length > 0) && (
-          <View style={styles.genresContainer}>
+          <View style={[styles.genresContainer, {width: screenWidth * 0.5}]}>
             <Text style={styles.genresTitile}>
               Genres:
             </Text>
@@ -25,7 +28,7 @@ export const Rating:React.FC<Props> = ({film}) => {
             ))}
           </View>
         )}
-        <View style={styles.genresContainer}>
+        <View style={[styles.genresContainer, {width: screenWidth * 0.5}]}>
           <Text style={styles.genresTitile}>
             Status:
           </Text>
@@ -34,9 +37,9 @@ export const Rating:React.FC<Props> = ({film}) => {
           </Text>
         </View>
       </View>
-      <View style={styles.scheduleContainer}>
+      <View style={[styles.scheduleContainer, {width: screenWidth}]}>
         {(film?.show?.schedule?.time && film?.show?.schedule?.days) && (
-        <View style={styles.schedule}>
+        <View style={[styles.schedule, {width: screenWidth * 0.5}]}>
           <View style={styles.scheduleImgContainer}>
             <Image source={require('../../src/assents/images/schedule.png')} style={styles.scheduleImg} />
           </View>
@@ -57,7 +60,7 @@ export const Rating:React.FC<Props> = ({film}) => {
         </View>
         )}
         {(film?.show?.rating?.average) && (
-            <View style={styles.flexContainer}>
+            <View style={[styles.flexContainer, {width: screenWidth * 0.5}]}>
               <Text style={styles.textRating}>Rating:  </Text>
                <Icon name="star" size={15} color="gold" />
               <Text style={styles.textRating}>{`${film?.show?.rating?.average}/10`}</Text>
@@ -70,7 +73,6 @@ export const Rating:React.FC<Props> = ({film}) => {
 
 const styles = StyleSheet.create({
   container: {
-    width: screenWidth,
     backgroundColor: colors.PRIMARY_COLOR,
     display: 'flex',
     justifyContent: 'center',
@@ -81,7 +83,6 @@ const styles = StyleSheet.create({
     paddingRight: 20,
   },
   genresContainer: {
-    width: screenWidth * 0.5,
     height: 50,
     display: 'flex',
     alignItems: 'center',
@@ -104,13 +105,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginRight: 15,
   },
-  genresContainerTitle: {
-    width: screenWidth * 0.5,
-    display: 'flex',
-    alignItems: 'flex-end',
-    justifyContent: 'center',
-    paddingRight: 5
-  },
   genresContainerFlex: {
     width: 100,
     display: 'flex',
@@ -119,14 +113,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   scheduleContainer: {
-    width: screenWidth,
     display: 'flex',
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'center',
   },
   schedule: {
-    width: screenWidth * 0.5,
     height: 100,
     display: 'flex',
     justifyContent: 'center',
@@ -163,7 +155,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
   flexContainer: {
-    width: screenWidth * 0.5,
     height: 100,
     display: 'flex',
     alignItems: 'center',
